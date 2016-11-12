@@ -10,7 +10,7 @@ canvas {
 input {
   background: transparent;
   border: none;
-  margin: 10px 384px;
+  margin: 10px 300px;
   width: 180px;
   font-size: 18px;
   padding: 6px;
@@ -18,18 +18,18 @@ input {
 }
 
 </style>
-<input autofocus maxlength=5 placeholder="type a zipcode">
+<input autofocus maxlength=6 placeholder="type a pincode">
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var width = 960,
-    height = 500;
+var width = 600,
+    height = 1000;
 
-var projection = d3.geo.albersUsa()
-    .scale(1000)
-    .translate([width / 2, height / 2]);
+var projection = d3.geo.mercator()
+    .scale(1200)
+    .translate([-1400,800]);
 
-d3.tsv("zipcodes.tsv", function(error, zipcodes) {
+d3.csv("pincodes.csv", function(error, zipcodes) {
   if (error) throw error;
 
   var zip0;
