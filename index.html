@@ -10,7 +10,7 @@ canvas {
 input {
   background: transparent;
   border: none;
-  margin: 10px 300px;
+  margin: 30px 300px;
   width: 180px;
   font-size: 18px;
   padding: 6px;
@@ -19,23 +19,23 @@ input {
 
 </style>
 <input autofocus maxlength=6 placeholder="type a pincode">
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var width = 600,
-    height = 1000;
+var width = 650,
+    height = 650;
 
 var projection = d3.geo.mercator()
     .scale(1200)
     .translate([-1400,800]);
 
-d3.csv("pincodes.csv", function(error, zipcodes) {
+d3.csv("pincodes.csv", function(error, pincodes) {
   if (error) throw error;
 
-  var zip0;
+  var pin0;
 
-  // Compute projected locations of each zipcode.
-  zipcodes.forEach(function(d) {
+  // Compute projected locations of each pincode.
+  pincodes.forEach(function(d) {
     var p = projection([+d.lon, +d.lat]);
     if (p) d.x = Math.round(p[0]), d.y = Math.round(p[1]);
   });
@@ -49,14 +49,14 @@ d3.csv("pincodes.csv", function(error, zipcodes) {
   change();
 
   function change() {
-    var zip1 = input.property("value");
-    if (zip0 === zip1) return;
-    zip0 = zip1;
+    var pin1 = input.property("value");
+    if (pin0 === pin1) return;
+    pin0 = pin1;
 
     // Select old canvases to remove after fade.
     var canvas0 = d3.selectAll("canvas");
 
-    // Add a new canvas, initially with opacity 0, to show the new zipcodes.
+    // Add a new canvas, initially with opacity 0, to show the new pincodes.
     var canvas1 = d3.select("body").insert("canvas", "input")
         .attr("width", width)
         .attr("height", height)
@@ -66,24 +66,24 @@ d3.csv("pincodes.csv", function(error, zipcodes) {
     context.fillStyle = "#fff";
     context.fillRect(0, 0, width, height);
 
-    // Render the inactive zipcodes.
+    // Render the inactive pincodes.
     context.globalAlpha = .4;
-    context.fillStyle = zip1 ? "#aaa" : (zip1 = "*", "#000");
-    zipcodes.forEach(function(d) {
-      for (var i = 0, n = zip1.length; i < n; ++i) {
-        if (d.zip[i] !== zip1[i]) {
+    context.fillStyle = pin1 ? "#aaa" : (pin1 = "*", "#000");
+    pincodes.forEach(function(d) {
+      for (var i = 0, n = pin1.length; i < n; ++i) {
+        if (d.pin[i] !== pin1[i]) {
           context.fillRect(d.x, d.y, 1, 1);
           return;
         }
       }
     });
 
-    // Render the active zipcodes.
+    // Render the active pincodes.
     context.globalAlpha = 1;
     context.fillStyle = "#f00";
-    zipcodes.forEach(function(d) {
-      for (var i = 0, n = zip1.length; i < n; ++i) {
-        if (d.zip[i] !== zip1[i]) {
+    pincodes.forEach(function(d) {
+      for (var i = 0, n = pin1.length; i < n; ++i) {
+        if (d.pin[i] !== pin1[i]) {
           return;
         }
       }
